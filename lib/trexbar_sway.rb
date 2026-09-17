@@ -12,5 +12,5 @@ require_relative "trexbar_sway/runtime/waybar"
 require_relative "trexbar_sway/cli"
 
 module TrexbarSway
-  VERSION = "0.1.2"
+  VERSION = "0.1.3"
 end

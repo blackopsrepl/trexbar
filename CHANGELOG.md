@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.3](https://github.com/blackopsrepl/trexbar-sway/compare/v0.1.2...v0.1.3) (2026-09-17)
+
+
+### Features
+
+* **ui:** square the panel and add motion polish 35aef70
+
 ## [0.1.2](///compare/v0.1.1...v0.1.2) (2026-05-16)
 
 
