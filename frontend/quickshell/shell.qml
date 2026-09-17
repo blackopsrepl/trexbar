@@ -162,7 +162,7 @@ ShellRoot {
         color: "#10131F"
         border.color: Qt.rgba(accent.r, accent.g, accent.b, 0.5)
         border.width: 1
-        radius: 6
+        radius: 0
 
         ColumnLayout {
             anchors.fill: parent
@@ -201,7 +201,15 @@ ShellRoot {
         color: buttonArea.containsMouse ? Qt.rgba(accent.r, accent.g, accent.b, 0.14) : "#151927"
         border.color: buttonArea.containsMouse ? accent : "#2E344A"
         border.width: 1
-        radius: 6
+        radius: 0
+
+        Behavior on color {
+            ColorAnimation { duration: 110 }
+        }
+
+        Behavior on border.color {
+            ColorAnimation { duration: 110 }
+        }
 
         RowLayout {
             anchors.centerIn: parent
@@ -239,7 +247,15 @@ ShellRoot {
         color: pillArea.containsMouse ? Qt.rgba(130/255, 251/255, 156/255, 0.05) : "#151927"
         border.color: pillArea.containsMouse ? "#82FB9C" : "#2E344A"
         border.width: 1
-        radius: 14
+        radius: 0
+
+        Behavior on color {
+            ColorAnimation { duration: 110 }
+        }
+
+        Behavior on border.color {
+            ColorAnimation { duration: 110 }
+        }
 
         RowLayout {
             id: pillContent
@@ -249,7 +265,7 @@ ShellRoot {
             Rectangle {
                 Layout.preferredWidth: 8
                 Layout.preferredHeight: 8
-                radius: 4
+                radius: 0
                 color: root.agentStatusColor(agent ? agent.activityState : "unknown")
             }
 
@@ -301,6 +317,22 @@ ShellRoot {
             right: 0
         }
 
+        onVisibleChanged: {
+            if (visible) {
+                modalFade.restart()
+            }
+        }
+
+        NumberAnimation {
+            id: modalFade
+            target: card
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: 150
+            easing.type: Easing.OutCubic
+        }
+
         Shortcut {
             sequence: "Esc"
             context: Qt.WindowShortcut
@@ -322,6 +354,22 @@ ShellRoot {
             }
 
             Rectangle {
+                anchors.centerIn: parent
+                width: card.width + 10
+                height: card.height + 10
+                radius: 0
+                color: Qt.rgba(0, 0, 0, 0.22)
+            }
+
+            Rectangle {
+                anchors.centerIn: parent
+                width: card.width + 4
+                height: card.height + 4
+                radius: 0
+                color: Qt.rgba(0, 0, 0, 0.34)
+            }
+
+            Rectangle {
                 id: card
                 width: Math.min(960, Math.max(320, modal.width - 36))
                 height: Math.min(modal.height - 16, Math.max(420, modal.height - (modal.verticalMargin * 2)))
@@ -329,12 +377,12 @@ ShellRoot {
                 color: "#0B0C16"
                 border.color: "#82FB9C"
                 border.width: 1
-                radius: 8
+                radius: 0
 
                 Rectangle {
                     anchors.fill: parent
                     anchors.margins: 1
-                    radius: 7
+                    radius: 0
                     color: "transparent"
                     border.color: "#26304A"
                     border.width: 1
@@ -355,7 +403,7 @@ ShellRoot {
                             color: "#111827"
                             border.color: "#82FB9C"
                             border.width: 1
-                            radius: 8
+                            radius: 0
 
                             Canvas {
                                 anchors.fill: parent
@@ -490,7 +538,7 @@ ShellRoot {
                             color: Qt.rgba(root.statusColor(snapshotAdapter.status).r, root.statusColor(snapshotAdapter.status).g, root.statusColor(snapshotAdapter.status).b, 0.13)
                             border.color: root.statusColor(snapshotAdapter.status)
                             border.width: 1
-                            radius: 17
+                            radius: 0
 
                             Text {
                                 anchors.centerIn: parent
@@ -551,7 +599,7 @@ ShellRoot {
                         color: "#0F1320"
                         border.color: "#242B40"
                         border.width: 1
-                        radius: 8
+                        radius: 0
 
                         ColumnLayout {
                             anchors.fill: parent
@@ -593,7 +641,7 @@ ShellRoot {
                                     color: modelData.attached ? "#13221C" : (index % 2 === 0 ? "#151927" : "#10131F")
                                     border.color: modelData.attached ? "#82FB9C" : "#252B3F"
                                     border.width: 1
-                                    radius: 7
+                                    radius: 0
 
                                     RowLayout {
                                         anchors.fill: parent
@@ -604,7 +652,7 @@ ShellRoot {
                                             Layout.preferredWidth: 10
                                             Layout.fillHeight: true
                                             color: root.sessionStatusColor(modelData)
-                                            radius: 5
+                                            radius: 0
                                         }
 
                                         ColumnLayout {
@@ -723,7 +771,7 @@ ShellRoot {
                                         color: Qt.rgba(224/255, 108/255, 117/255, 0.1)
                                         border.color: "#E06C75"
                                         border.width: 1
-                                        radius: 13
+                                        radius: 0
 
                                         Text {
                                             id: errText
