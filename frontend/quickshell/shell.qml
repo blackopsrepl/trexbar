@@ -22,6 +22,55 @@ ShellRoot {
     property var errors: viewData.errors || []
     property var headlineSession: viewData.headlineSession || null
 
+    // Omarchy theme wiring: live-follows the active Omarchy theme palette
+    // (the same colors.toml the Omarchy shell reads). Falls back to the
+    // built-in palette where a key is absent or Omarchy is not running.
+    property string themeColorsPath: Quickshell.env("OMARCHY_THEME_COLORS") || ((Quickshell.env("HOME") || "") + "/.local/state/omarchy/current/theme/colors.toml")
+    property var themePalette: ({})
+
+    function applyThemeColors(raw) {
+        var parsed = {}
+        var lines = String(raw || "").split("\n")
+        for (var i = 0; i < lines.length; i++) {
+            var match = lines[i].match(/^\s*([A-Za-z0-9_-]+)\s*=\s*["']?(#[0-9A-Fa-f]{6})/)
+            if (match)
+                parsed[match[1]] = match[2]
+        }
+        root.themePalette = parsed
+    }
+
+    function themeColor(key, fallback) {
+        var value = root.themePalette[key]
+        return (typeof value === "string" && value.length > 0) ? value : fallback
+    }
+
+    readonly property QtObject theme: QtObject {
+        readonly property color bg: root.themeColor("background", "#0B0C16")
+        readonly property color bgDeep: root.themeColor("dark_background", "#050711")
+        readonly property color surface: root.themeColor("lighter_background", "#151927")
+        readonly property color surfaceAlt: root.themeColor("selection", "#10131F")
+        readonly property color border: root.themeColor("muted", "#2E344A")
+        readonly property color borderSoft: root.themeColor("muted", "#26304A")
+        readonly property color borderFaint: root.themeColor("selection", "#252B3F")
+        readonly property color text: root.themeColor("bright_foreground", "#DDF7FF")
+        readonly property color textMuted: root.themeColor("dark_foreground", "#6A6E95")
+        readonly property color good: root.themeColor("green", "#82FB9C")
+        readonly property color goodSoft: root.themeColor("bright_green", "#9CF7C2")
+        readonly property color info: root.themeColor("bright_cyan", "#85E1FB")
+        readonly property color warn: root.themeColor("yellow", "#F2C572")
+        readonly property color bad: root.themeColor("red", "#E06C75")
+    }
+
+    FileView {
+        id: themeFile
+        path: root.themeColorsPath
+        watchChanges: true
+        printErrors: false
+        onLoaded: root.applyThemeColors(text())
+        onFileChanged: reload()
+        onLoadFailed: root.applyThemeColors("")
+    }
+
     function runTrexbar(args) {
         if (actionRunner.running) {
             actionRunner.signal(9)
@@ -38,15 +87,15 @@ ShellRoot {
 
     function statusColor(level) {
         if (level === "critical" || level === "error") {
-            return "#E06C75"
+            return root.theme.bad
         }
         if (level === "warning") {
-            return "#F2C572"
+            return root.theme.warn
         }
         if (level === "stale" || level === "loading") {
-            return "#6A6E95"
+            return root.theme.textMuted
         }
-        return "#82FB9C"
+        return root.theme.good
     }
 
     function sessionStatusColor(session) {
@@ -55,12 +104,12 @@ ShellRoot {
 
     function agentStatusColor(state) {
         if (state === "running") {
-            return "#82FB9C"
+            return root.theme.good
         }
         if (state === "waiting") {
-            return "#F2C572"
+            return root.theme.warn
         }
-        return "#6A6E95"
+        return root.theme.textMuted
     }
 
     function gitText(session) {
@@ -155,11 +204,11 @@ ShellRoot {
     component MetricTile: Rectangle {
         property string label: ""
         property string value: ""
-        property color accent: "#82FB9C"
+        property color accent: root.theme.good
 
         Layout.fillWidth: true
         Layout.preferredHeight: 74
-        color: "#10131F"
+        color: root.theme.surfaceAlt
         border.color: Qt.rgba(accent.r, accent.g, accent.b, 0.5)
         border.width: 1
         radius: 0
@@ -172,7 +221,7 @@ ShellRoot {
             Text {
                 Layout.fillWidth: true
                 text: label
-                color: "#6A6E95"
+                color: root.theme.textMuted
                 font.family: root.textFont
                 font.pixelSize: 11
                 elide: Text.ElideRight
@@ -194,12 +243,12 @@ ShellRoot {
         signal clicked()
         property string icon: ""
         property string label: ""
-        property color accent: "#82FB9C"
+        property color accent: root.theme.good
 
         Layout.preferredWidth: 112
         Layout.preferredHeight: 38
-        color: buttonArea.containsMouse ? Qt.rgba(accent.r, accent.g, accent.b, 0.14) : "#151927"
-        border.color: buttonArea.containsMouse ? accent : "#2E344A"
+        color: buttonArea.containsMouse ? Qt.rgba(accent.r, accent.g, accent.b, 0.14) : root.theme.surface
+        border.color: buttonArea.containsMouse ? accent : root.theme.border
         border.width: 1
         radius: 0
 
@@ -224,7 +273,7 @@ ShellRoot {
 
             Text {
                 text: label
-                color: "#DDF7FF"
+                color: root.theme.text
                 font.family: root.textFont
                 font.pixelSize: 12
             }
@@ -244,8 +293,8 @@ ShellRoot {
 
         implicitHeight: 28
         implicitWidth: pillContent.implicitWidth + 24
-        color: pillArea.containsMouse ? Qt.rgba(130/255, 251/255, 156/255, 0.05) : "#151927"
-        border.color: pillArea.containsMouse ? "#82FB9C" : "#2E344A"
+        color: pillArea.containsMouse ? Qt.rgba(root.theme.good.r, root.theme.good.g, root.theme.good.b, 0.05) : root.theme.surface
+        border.color: pillArea.containsMouse ? root.theme.good : root.theme.border
         border.width: 1
         radius: 0
 
@@ -271,7 +320,7 @@ ShellRoot {
 
             Text {
                 text: agent ? (agent.processName + " / " + agent.projectName) : "unknown"
-                color: "#DDF7FF"
+                color: root.theme.text
                 font.family: root.textFont
                 font.pixelSize: 11
                 font.bold: true
@@ -280,7 +329,7 @@ ShellRoot {
             Text {
                 visible: agent && agent.childAiNames && agent.childAiNames.length > 0
                 text: agent ? ("(" + agent.childAiNames.length + ")") : ""
-                color: "#6A6E95"
+                color: root.theme.textMuted
                 font.family: root.textFont
                 font.pixelSize: 10
             }
@@ -344,7 +393,7 @@ ShellRoot {
 
             Rectangle {
                 anchors.fill: parent
-                color: "#050711"
+                color: root.theme.bgDeep
                 opacity: 0.66
             }
 
@@ -374,8 +423,8 @@ ShellRoot {
                 width: Math.min(960, Math.max(320, modal.width - 36))
                 height: Math.min(modal.height - 16, Math.max(420, modal.height - (modal.verticalMargin * 2)))
                 anchors.centerIn: parent
-                color: "#0B0C16"
-                border.color: "#82FB9C"
+                color: root.theme.bg
+                border.color: root.theme.good
                 border.width: 1
                 radius: 0
 
@@ -384,7 +433,7 @@ ShellRoot {
                     anchors.margins: 1
                     radius: 0
                     color: "transparent"
-                    border.color: "#26304A"
+                    border.color: root.theme.borderSoft
                     border.width: 1
                 }
 
@@ -400,8 +449,8 @@ ShellRoot {
                         Rectangle {
                             Layout.preferredWidth: 48
                             Layout.preferredHeight: 48
-                            color: "#111827"
-                            border.color: "#82FB9C"
+                            color: root.theme.surfaceAlt
+                            border.color: root.theme.good
                             border.width: 1
                             radius: 0
 
@@ -428,8 +477,8 @@ ShellRoot {
                                     ctx.lineTo(x(37), y(9))
                                     ctx.stroke()
 
-                                    ctx.fillStyle = "#05080F"
-                                    ctx.strokeStyle = "#82FB9C"
+                                    ctx.fillStyle = root.theme.bgDeep
+                                    ctx.strokeStyle = root.theme.good
                                     ctx.lineWidth = Math.max(1, x(1.7))
                                     ctx.beginPath()
                                     ctx.moveTo(x(33), y(12))
@@ -445,14 +494,14 @@ ShellRoot {
                                     ctx.fill()
                                     ctx.stroke()
 
-                                    ctx.strokeStyle = "#26304A"
+                                    ctx.strokeStyle = root.theme.borderSoft
                                     ctx.lineWidth = Math.max(1, x(1))
                                     ctx.beginPath()
                                     ctx.moveTo(x(9), y(22))
                                     ctx.quadraticCurveTo(x(15), y(24), x(22), y(22))
                                     ctx.stroke()
 
-                                    ctx.fillStyle = "#DDF7FF"
+                                    ctx.fillStyle = root.theme.text
                                     var teeth = [9, 13, 17]
                                     for (var i = 0; i < teeth.length; i++) {
                                         ctx.beginPath()
@@ -463,8 +512,8 @@ ShellRoot {
                                         ctx.fill()
                                     }
 
-                                    ctx.fillStyle = "#82FB9C"
-                                    ctx.strokeStyle = "#DDF7FF"
+                                    ctx.fillStyle = root.theme.good
+                                    ctx.strokeStyle = root.theme.text
                                     ctx.lineWidth = Math.max(1, x(0.8))
                                     ctx.beginPath()
                                     ctx.moveTo(x(20), y(13))
@@ -476,26 +525,26 @@ ShellRoot {
                                     ctx.fill()
                                     ctx.stroke()
 
-                                    ctx.strokeStyle = "#05080F"
+                                    ctx.strokeStyle = root.theme.bgDeep
                                     ctx.lineWidth = Math.max(1, x(1.5))
                                     ctx.beginPath()
                                     ctx.moveTo(x(25.5), y(12.4))
                                     ctx.lineTo(x(24.3), y(16.4))
                                     ctx.stroke()
 
-                                    ctx.strokeStyle = "#82FB9C"
+                                    ctx.strokeStyle = root.theme.good
                                     ctx.lineWidth = Math.max(1, x(1.5))
                                     ctx.beginPath()
                                     ctx.moveTo(x(18), y(10))
                                     ctx.lineTo(x(27), y(8))
                                     ctx.stroke()
 
-                                    ctx.fillStyle = "#6A6E95"
+                                    ctx.fillStyle = root.theme.textMuted
                                     ctx.beginPath()
                                     ctx.arc(x(7.5), y(15.4), Math.max(1, x(1.1)), 0, Math.PI * 2)
                                     ctx.fill()
 
-                                    ctx.strokeStyle = "#9CF7C2"
+                                    ctx.strokeStyle = root.theme.goodSoft
                                     ctx.lineWidth = Math.max(1, x(1.1))
                                     ctx.beginPath()
                                     ctx.moveTo(x(31), y(24))
@@ -514,7 +563,7 @@ ShellRoot {
                             Text {
                                 Layout.fillWidth: true
                                 text: "trexbar"
-                                color: "#DDF7FF"
+                                color: root.theme.text
                                 font.family: root.textFont
                                 font.pixelSize: 26
                                 font.bold: true
@@ -525,7 +574,7 @@ ShellRoot {
                                 Layout.fillWidth: true
                                 text: (headlineSession ? (headlineSession.name + "  " + root.sessionMeta(headlineSession)) : "tmux session overview") +
                                     "  " + (snapshotAdapter.generatedAt || "waiting for data")
-                                color: "#9CF7C2"
+                                color: root.theme.goodSoft
                                 font.family: root.textFont
                                 font.pixelSize: 12
                                 elide: Text.ElideRight
@@ -559,7 +608,7 @@ ShellRoot {
                         IconButton {
                             icon: ""
                             label: "Close"
-                            accent: "#85E1FB"
+                            accent: root.theme.info
                             onClicked: root.closeModal()
                         }
                     }
@@ -576,19 +625,19 @@ ShellRoot {
                         MetricTile {
                             label: "attached"
                             value: summary.attachedCount || 0
-                            accent: "#85E1FB"
+                            accent: root.theme.info
                         }
 
                         MetricTile {
                             label: "agents"
                             value: summary.agentCount || 0
-                            accent: "#F2C572"
+                            accent: root.theme.warn
                         }
 
                         MetricTile {
                             label: "dirty repos"
                             value: summary.dirtyRepoCount || 0
-                            accent: (summary.dirtyRepoCount || 0) > 0 ? "#E5C07B" : "#82FB9C"
+                            accent: (summary.dirtyRepoCount || 0) > 0 ? root.theme.warn : root.theme.good
                         }
                     }
 
@@ -596,8 +645,8 @@ ShellRoot {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.minimumHeight: 240
-                        color: "#0F1320"
-                        border.color: "#242B40"
+                        color: root.theme.bgDeep
+                        border.color: root.theme.borderFaint
                         border.width: 1
                         radius: 0
 
@@ -611,7 +660,7 @@ ShellRoot {
 
                                 Text {
                                     text: "sessions"
-                                    color: "#DDF7FF"
+                                    color: root.theme.text
                                     font.family: root.textFont
                                     font.pixelSize: 14
                                     font.bold: true
@@ -622,7 +671,7 @@ ShellRoot {
                                     text: (summary.activeCount || 0) + " active  " +
                                         (summary.idleCount || 0) + " idle  " +
                                         (summary.dormantCount || 0) + " dormant"
-                                    color: "#6A6E95"
+                                    color: root.theme.textMuted
                                     font.family: root.textFont
                                     font.pixelSize: 11
                                 }
@@ -638,8 +687,8 @@ ShellRoot {
                                 delegate: Rectangle {
                                     width: ListView.view.width
                                     height: 72
-                                    color: modelData.attached ? "#13221C" : (index % 2 === 0 ? "#151927" : "#10131F")
-                                    border.color: modelData.attached ? "#82FB9C" : "#252B3F"
+                                    color: modelData.attached ? Qt.rgba(root.theme.good.r, root.theme.good.g, root.theme.good.b, 0.10) : (index % 2 === 0 ? root.theme.surface : root.theme.surfaceAlt)
+                                    border.color: modelData.attached ? root.theme.good : root.theme.borderFaint
                                     border.width: 1
                                     radius: 0
 
@@ -666,7 +715,7 @@ ShellRoot {
                                                 Text {
                                                     Layout.fillWidth: true
                                                     text: modelData.name || "unnamed"
-                                                    color: "#DDF7FF"
+                                                    color: root.theme.text
                                                     font.family: root.textFont
                                                     font.pixelSize: 15
                                                     font.bold: true
@@ -675,7 +724,7 @@ ShellRoot {
 
                                                 Text {
                                                     text: modelData.attached ? "attached" : "detached"
-                                                    color: modelData.attached ? "#82FB9C" : "#6A6E95"
+                                                    color: modelData.attached ? root.theme.good : root.theme.textMuted
                                                     font.family: root.textFont
                                                     font.pixelSize: 11
                                                 }
@@ -684,7 +733,7 @@ ShellRoot {
                                             Text {
                                                 Layout.fillWidth: true
                                                 text: root.gitText(modelData)
-                                                color: "#85E1FB"
+                                                color: root.theme.info
                                                 font.family: root.textFont
                                                 font.pixelSize: 11
                                                 elide: Text.ElideRight
@@ -693,7 +742,7 @@ ShellRoot {
                                             Text {
                                                 Layout.fillWidth: true
                                                 text: root.sessionMeta(modelData)
-                                                color: "#9CF7C2"
+                                                color: root.theme.goodSoft
                                                 font.family: root.textFont
                                                 font.pixelSize: 11
                                                 elide: Text.ElideRight
@@ -727,7 +776,7 @@ ShellRoot {
 
                             Text {
                                 text: "ACTIVE AGENTS"
-                                color: "#6A6E95"
+                                color: root.theme.textMuted
                                 font.family: root.textFont
                                 font.pixelSize: 9
                                 font.bold: true
@@ -753,7 +802,7 @@ ShellRoot {
 
                             Text {
                                 text: "BACKEND ERRORS"
-                                color: "#6A6E95"
+                                color: root.theme.textMuted
                                 font.family: root.textFont
                                 font.pixelSize: 9
                                 font.bold: true
@@ -769,7 +818,7 @@ ShellRoot {
                                         implicitHeight: 26
                                         implicitWidth: Math.min(errText.implicitWidth + 24, parent && parent.width > 0 ? parent.width : errText.implicitWidth + 24)
                                         color: Qt.rgba(224/255, 108/255, 117/255, 0.1)
-                                        border.color: "#E06C75"
+                                        border.color: root.theme.bad
                                         border.width: 1
                                         radius: 0
 
@@ -778,7 +827,7 @@ ShellRoot {
                                             anchors.centerIn: parent
                                             width: Math.max(0, parent.width - 24)
                                             text: modelData.message
-                                            color: "#E06C75"
+                                            color: root.theme.bad
                                             elide: Text.ElideRight
                                             font.family: root.textFont
                                             font.pixelSize: 11

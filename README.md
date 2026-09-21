@@ -68,7 +68,7 @@ trexbar-sway omarchy remove
 exec-once = trexbar-sway daemon
 ```
 
-The `waybar` chip contract is unchanged: Waybar on sway and the Omarchy shell on Hyprland both render the same cached-state JSON.
+The `waybar` chip contract is unchanged: Waybar on sway and the Omarchy shell on Hyprland both render the same cached-state JSON. The QuickShell modal follows the active Omarchy theme (live, via `theme/colors.toml`); outside Omarchy it keeps the built-in palette.
 
 ## Documentation
 
