@@ -8,6 +8,7 @@ Guidance for Codex and other coding agents working in this repository.
 - Waybar render commands must read cached state only. Do not run `tmux`, scan `/proc`, or call `trex snapshot --json` from `waybar render`.
 - The Ruby app consumes `trex snapshot --json`; it does not duplicate `trex` backend logic.
 - For SolverForge Linux integration, edit the managed default layer under `~/.local/share/solverforge/`, not symlinked `~/.config/waybar` files.
+- Omarchy shell integration must edit `~/.config/omarchy/shell.json` only through `Runtime::Omarchy` (the `omarchy` CLI command); never hand-edit the seeded layout elsewhere.
 - Keep `README.md`, `WIREFRAME.md`, `docs/*.md`, and this file aligned with the shipped CLI, cached-state contract, QuickShell UI, and detected agents (Codex, Gemini).
 - When a task is simple, do the simple thing. Do not expand scope into unrelated critical paths.
 

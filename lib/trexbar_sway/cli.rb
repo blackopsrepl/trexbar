@@ -35,6 +35,8 @@ module TrexbarSway
         run_ui_command(args, config_path)
       when "waybar"
         run_waybar_command(args, config_path)
+      when "omarchy"
+        run_omarchy_command(args)
       else
         raise ArgumentError, "Unknown command: #{command}"
       end
@@ -60,6 +62,21 @@ module TrexbarSway
           args[:pretty] = true
         when "--once"
           args[:once] = true
+        when "--after"
+          index += 1
+          args[:after] = argv[index]
+        when "--section"
+          index += 1
+          args[:section] = argv[index]
+        when "--index"
+          index += 1
+          args[:index] = argv[index]
+        when "--interval"
+          index += 1
+          args[:interval] = argv[index]
+        when "--exec"
+          index += 1
+          args[:exec] = argv[index]
         else
           args[:positionals] << value
         end
@@ -123,6 +140,48 @@ module TrexbarSway
       0
     end
 
+    def run_omarchy_command(args)
+      subcommand = args[:positionals].first || "status"
+      result = case subcommand
+               when "install"
+                 Runtime::Omarchy.install(
+                   after: args[:after],
+                   section: args[:section],
+                   index: args[:index],
+                   interval: args[:interval] || Runtime::Omarchy::DEFAULT_INTERVAL,
+                   bin: args[:exec]
+                 )
+               when "remove"
+                 Runtime::Omarchy.remove
+               when "status"
+                 Runtime::Omarchy.status
+               else
+                 raise ArgumentError, "Unknown omarchy subcommand: #{subcommand}"
+               end
+      print_json_if_requested(result, args)
+      unless args[:format] == "json"
+        puts describe_omarchy_result(subcommand, result)
+      end
+      0
+    end
+
+    def describe_omarchy_result(subcommand, result)
+      case subcommand
+      when "install"
+        "Installed #{Runtime::Omarchy::MODULE_ID} module in #{result[:shellConfig]} " \
+          "(#{result[:section]}[#{result[:index]}], seeded from #{result[:seededFrom]})"
+      when "remove"
+        result[:removed] ? "Removed #{Runtime::Omarchy::MODULE_ID} module from #{result[:shellConfig]}" : result[:reason]
+      else
+        if result[:installed]
+          "#{Runtime::Omarchy::MODULE_ID} module installed at #{result[:shellConfig]} " \
+            "(#{result[:section]}[#{result[:index]}])"
+        else
+          "#{Runtime::Omarchy::MODULE_ID} module not installed"
+        end
+      end
+    end
+
     def print_json_if_requested(payload, args)
       print_json(payload, args) if args[:format] == "json"
     end
@@ -141,6 +200,7 @@ module TrexbarSway
           panel
           ui open|close|toggle|status
           waybar render|refresh|panel
+          omarchy install|remove|status
       TEXT
     end
   end

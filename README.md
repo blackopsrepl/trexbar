@@ -33,6 +33,9 @@ trexbar-sway ui toggle
 trexbar-sway waybar render
 trexbar-sway waybar refresh
 trexbar-sway waybar panel
+trexbar-sway omarchy install
+trexbar-sway omarchy remove
+trexbar-sway omarchy status
 trexbar-sway panel
 ```
 
@@ -48,6 +51,24 @@ Use `make check-trex` to verify the backend dependency from this checkout.
 Waybar does not poll `trex`, tmux, `/proc`, or git by itself. If the daemon is not running after login or reboot, the Waybar chip can keep rendering, but it will render stale cached state. A desktop integration should therefore start and supervise the daemon at session startup.
 
 On SolverForge Linux, the managed Waybar integration starts companion daemons through `solverforge-waybar-companions-start`, launched from Sway `exec_always` beside Waybar. That launcher restarts `trexbar-sway daemon` if an early boot-time refresh failure makes it exit.
+
+## Hyprland + Omarchy
+
+On a Hyprland desktop running the Omarchy shell, the same Waybar chip mounts as a bar command module:
+
+```bash
+trexbar-sway omarchy install   # adds the trexbar module next to omarchy.weather
+trexbar-sway omarchy status
+trexbar-sway omarchy remove
+```
+
+`omarchy install` seeds `~/.config/omarchy/shell.json` from the Omarchy defaults when the user file does not exist yet, inserts a `type: command` module (default placement: `--after omarchy.weather`), and asks the running shell to reload its config. The module polls `trexbar-sway waybar render` on an interval (`--interval`, default 5), opens the QuickShell modal on left click, and refreshes cached state on middle click. The daemon itself is not started by the module; launch it at session startup, for example from Hyprland:
+
+```ini
+exec-once = trexbar-sway daemon
+```
+
+The `waybar` chip contract is unchanged: Waybar on sway and the Omarchy shell on Hyprland both render the same cached-state JSON.
 
 ## Documentation
 

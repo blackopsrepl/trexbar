@@ -228,6 +228,7 @@ trexbar-sway daemon [--once]
 trexbar-sway panel
 trexbar-sway ui open|close|toggle|status
 trexbar-sway waybar render|refresh|panel
+trexbar-sway omarchy install|remove|status
 ```
 
 Global flags:
