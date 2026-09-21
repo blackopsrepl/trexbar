@@ -9,6 +9,7 @@ require_relative "trexbar_sway/runtime/presenter"
 require_relative "trexbar_sway/runtime/daemon"
 require_relative "trexbar_sway/runtime/quickshell"
 require_relative "trexbar_sway/runtime/waybar"
+require_relative "trexbar_sway/runtime/omarchy"
 require_relative "trexbar_sway/cli"
 
 module TrexbarSway
