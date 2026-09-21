@@ -45,7 +45,14 @@ module TrexbarSway
       end
 
       def resolved_binary
-        ENV["TREXBAR_SWAY_BIN"].to_s.empty? ? "trexbar-sway" : ENV["TREXBAR_SWAY_BIN"]
+        candidates = [
+          ENV["TREXBAR_SWAY_BIN"],
+          File.join(Dir.home, ".local", "bin", "trexbar-sway"),
+          File.expand_path("../../../bin/trexbar-sway", __dir__),
+          "trexbar-sway"
+        ].compact
+
+        candidates.find { |candidate| candidate == "trexbar-sway" || File.executable?(candidate) } || "trexbar-sway"
       end
     end
   end
