@@ -18,13 +18,13 @@ module TrexbarSway
       DEFAULT_INTERVAL = 5
       DEFAULT_BIN = File.expand_path("../../../bin/trexbar-sway", __dir__)
 
-      def install(after: nil, section: nil, index: nil, interval: DEFAULT_INTERVAL, bin: nil)
+      def install(config_path, after: nil, section: nil, index: nil, interval: DEFAULT_INTERVAL, bin: nil)
         interval = normalize_interval(interval)
         bin = resolve_bin(bin)
 
         document, source = load_shell_document
         normalize_document!(document)
-        entry = module_entry(bin, interval)
+        entry = module_entry(bin, interval, config_path)
         location = place!(document, entry, after: after, section: section, index: index)
         save_shell_document(document)
         refresh_shell
@@ -106,15 +106,16 @@ module TrexbarSway
         document
       end
 
-      def module_entry(bin, interval)
+      def module_entry(bin, interval, config_path)
         quoted = Shellwords.escape(bin)
+        config = Shellwords.escape(File.expand_path(config_path))
         {
           "id" => MODULE_ID,
           "type" => "command",
-          "exec" => "#{quoted} waybar render",
+          "exec" => "#{quoted} waybar render --config #{config}",
           "interval" => interval,
-          "onClick" => "#{quoted} panel",
-          "onMiddleClick" => "#{quoted} refresh",
+          "onClick" => "#{quoted} panel --config #{config}",
+          "onMiddleClick" => "#{quoted} refresh --config #{config}",
           "tooltip" => "TrexBar tmux chip (left: panel, middle: refresh)"
         }
       end

@@ -31,7 +31,7 @@ module TrexbarSway
       end
 
       def test_install_seeds_user_config_from_defaults_after_weather
-        result = Omarchy.install(bin: fake_bin)
+        result = Omarchy.install(config_path, bin: fake_bin)
 
         assert result[:installed]
         assert_equal "defaults", result[:seededFrom]
@@ -44,8 +44,8 @@ module TrexbarSway
       end
 
       def test_install_is_idempotent_and_updates_entry
-        Omarchy.install(bin: fake_bin)
-        result = Omarchy.install(bin: fake_bin, interval: 9)
+        Omarchy.install(config_path, bin: fake_bin)
+        result = Omarchy.install(config_path, bin: fake_bin, interval: 9)
 
         center = read_user_shell.dig("bar", "layout", "center")
         assert_equal 1, ids(center).count("trexbar")
@@ -55,7 +55,7 @@ module TrexbarSway
       end
 
       def test_install_honors_explicit_section_and_index
-        result = Omarchy.install(bin: fake_bin, section: "right", index: 1)
+        result = Omarchy.install(config_path, bin: fake_bin, section: "right", index: 1)
 
         assert_equal "right", result[:section]
         assert_equal 1, result[:index]
@@ -64,7 +64,7 @@ module TrexbarSway
       end
 
       def test_install_falls_back_to_center_end_for_unknown_anchor
-        result = Omarchy.install(bin: fake_bin, after: "omarchy.does-not-exist")
+        result = Omarchy.install(config_path, bin: fake_bin, after: "omarchy.does-not-exist")
 
         assert result[:fallback]
         center = read_user_shell.dig("bar", "layout", "center")
@@ -79,18 +79,34 @@ module TrexbarSway
         File.write(bin, "#!/bin/sh\nexit 0\n")
         File.chmod(0o755, bin)
 
-        Omarchy.install(bin: bin)
+        Omarchy.install(config_path, bin: bin)
 
         entry = module_entry
         escaped = Shellwords.escape(bin)
-        assert_equal("#{escaped} waybar render", entry["exec"])
-        assert_equal("#{escaped} panel", entry["onClick"])
-        assert_equal("#{escaped} refresh", entry["onMiddleClick"])
+        escaped_config = Shellwords.escape(File.expand_path(config_path))
+        assert_equal("#{escaped} waybar render --config #{escaped_config}", entry["exec"])
+        assert_equal("#{escaped} panel --config #{escaped_config}", entry["onClick"])
+        assert_equal("#{escaped} refresh --config #{escaped_config}", entry["onMiddleClick"])
+      end
+
+      def test_install_records_the_selected_config_in_commands
+        @spaced_root = Dir.mktmpdir
+        config = File.join(@spaced_root, "my config.json")
+        bin = fake_bin
+
+        Omarchy.install(config, bin: bin)
+
+        entry = module_entry
+        escaped_bin = Shellwords.escape(bin)
+        escaped_config = Shellwords.escape(File.expand_path(config))
+        assert_equal("#{escaped_bin} waybar render --config #{escaped_config}", entry["exec"])
+        assert_equal("#{escaped_bin} panel --config #{escaped_config}", entry["onClick"])
+        assert_equal("#{escaped_bin} refresh --config #{escaped_config}", entry["onMiddleClick"])
       end
 
       def test_install_rejects_an_index_past_the_section_end
         error = assert_raises(ArgumentError) do
-          Omarchy.install(bin: fake_bin, section: "right", index: 5)
+          Omarchy.install(config_path, bin: fake_bin, section: "right", index: 5)
         end
 
         assert_match(/past the end of the right section/, error.message)
@@ -98,12 +114,12 @@ module TrexbarSway
       end
 
       def test_install_rejects_unknown_binary
-        error = assert_raises(RuntimeError) { Omarchy.install(bin: "/nonexistent/trexbar-sway") }
+        error = assert_raises(RuntimeError) { Omarchy.install(config_path, bin: "/nonexistent/trexbar-sway") }
         assert_match(/not found or not executable/, error.message)
       end
 
       def test_remove_drops_module_and_keeps_neighbors
-        Omarchy.install(bin: fake_bin)
+        Omarchy.install(config_path, bin: fake_bin)
 
         result = Omarchy.remove
 
@@ -124,7 +140,7 @@ module TrexbarSway
       def test_status_reflects_install_state
         refute Omarchy.status[:installed]
 
-        Omarchy.install(bin: fake_bin)
+        Omarchy.install(config_path, bin: fake_bin)
         status = Omarchy.status
 
         assert status[:installed]
@@ -136,13 +152,17 @@ module TrexbarSway
       def test_install_preserves_other_user_config_keys
         write_user_shell("custom" => { "note" => "keep me" })
 
-        Omarchy.install(bin: fake_bin)
+        Omarchy.install(config_path, bin: fake_bin)
 
         document = read_user_shell
         assert_equal({ "note" => "keep me" }, document["custom"])
       end
 
       private
+
+      def config_path
+        File.join(ENV["HOME"], ".config", "trexbar-sway", "config.json")
+      end
 
       def ids(entries)
         entries.map { |item| item["id"] }

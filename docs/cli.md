@@ -26,7 +26,7 @@ Behavior notes:
 - `waybar render` reads cached state only.
 - `waybar refresh` refreshes cached state.
 - `waybar panel` opens the QuickShell modal.
-- `omarchy install` mounts the Waybar chip as an Omarchy shell bar command module in `~/.config/omarchy/shell.json`, by default after `omarchy.weather`; it seeds the user file from the Omarchy defaults when missing.
+- `omarchy install` mounts the Waybar chip as an Omarchy shell bar command module in `~/.config/omarchy/shell.json`, by default after `omarchy.weather`; it seeds the user file from the Omarchy defaults when missing. The generated `render`, `panel`, and `refresh` commands record the resolved `--config` path, so the chip reads the same cached state as the daemon.
 - `omarchy remove` drops the module from the user shell config.
 - `omarchy status` reports whether the module is installed and where.
 

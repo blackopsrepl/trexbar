@@ -62,7 +62,7 @@ trexbar-sway omarchy status
 trexbar-sway omarchy remove
 ```
 
-`omarchy install` seeds `~/.config/omarchy/shell.json` from the Omarchy defaults when the user file does not exist yet, inserts a `type: command` module (default placement: `--after omarchy.weather`), and asks the running shell to reload its config. The module polls `trexbar-sway waybar render` on an interval (`--interval`, default 5), opens the QuickShell modal on left click, and refreshes cached state on middle click. The daemon itself is not started by the module; launch it at session startup, for example from Hyprland:
+`omarchy install` seeds `~/.config/omarchy/shell.json` from the Omarchy defaults when the user file does not exist yet, inserts a `type: command` module (default placement: `--after omarchy.weather`), and asks the running shell to reload its config. The module polls `trexbar-sway waybar render` on an interval (`--interval`, default 5), opens the QuickShell modal on left click, and refreshes cached state on middle click. The generated commands record the resolved `--config` path, so a daemon started with `--config` keeps the chip on the same state directory. The daemon itself is not started by the module; launch it at session startup, for example from Hyprland:
 
 ```ini
 exec-once = trexbar-sway daemon
