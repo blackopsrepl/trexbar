@@ -34,6 +34,6 @@ Behavior notes:
 
 - `--after ID` — anchor widget id to insert after (default `omarchy.weather`; an id that is not on the bar falls back to the end of the center section)
 - `--section left|center|right` — explicit target section
-- `--index N` — explicit position inside `--section`
+- `--index N` — explicit position inside `--section` (must be within `0..length`)
 - `--interval SECONDS` — render poll interval (default 5)
 - `--exec PATH` — alternate `trexbar-sway` binary to record in the module commands

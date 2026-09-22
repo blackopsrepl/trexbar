@@ -88,6 +88,15 @@ module TrexbarSway
         assert_equal("#{escaped} refresh", entry["onMiddleClick"])
       end
 
+      def test_install_rejects_an_index_past_the_section_end
+        error = assert_raises(ArgumentError) do
+          Omarchy.install(bin: fake_bin, section: "right", index: 5)
+        end
+
+        assert_match(/past the end of the right section/, error.message)
+        refute File.exist?(Omarchy.shell_config_path), "a rejected install must not write the shell config"
+      end
+
       def test_install_rejects_unknown_binary
         error = assert_raises(RuntimeError) { Omarchy.install(bin: "/nonexistent/trexbar-sway") }
         assert_match(/not found or not executable/, error.message)
