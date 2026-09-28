@@ -17,6 +17,16 @@ class PresenterTest < Minitest::Test
     assert_match(/TRX 2/, view.dig(:chip, :text))
   end
 
+  def test_surfaces_detected_agents_including_hermes
+    snapshot = TrexbarSway::Runtime::State.build_snapshot(TrexbarSway::Core::Config.default_config, backend_payload)
+    view = TrexbarSway::Runtime::Presenter.build_snapshot_view(snapshot, stale: false)
+
+    names = view[:agents].map { |agent| agent[:processName] }
+    assert_includes names, "codex"
+    assert_includes names, "gemini"
+    assert_includes names, "hermes"
+  end
+
   def test_loading_payload_has_stable_classes
     config = TrexbarSway::Core::Config.default_config
     payload = TrexbarSway::Runtime::Waybar.payload(config, nil)

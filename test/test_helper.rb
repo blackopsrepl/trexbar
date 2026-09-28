@@ -43,7 +43,7 @@ module TrexbarSwayTestHelpers
       summary: {
         sessionCount: 2,
         attachedCount: 1,
-        agentCount: 2,
+        agentCount: 3,
         activeCount: 1,
         idleCount: 0,
         dormantCount: 1,
@@ -77,7 +77,8 @@ module TrexbarSwayTestHelpers
       ],
       agents: [
         { processName: "codex", projectName: "trex", tmuxSession: "dev", activityState: "running", pid: 42, childAiNames: [] },
-        { processName: "gemini", projectName: "trex", tmuxSession: "dev", activityState: "waiting", pid: 43, childAiNames: ["agent-1", "agent-2"] }
+        { processName: "gemini", projectName: "trex", tmuxSession: "dev", activityState: "waiting", pid: 43, childAiNames: ["agent-1", "agent-2"] },
+        { processName: "hermes", projectName: "trex", tmuxSession: "dev", activityState: "waiting", pid: 44, childAiNames: [] }
       ],
       errors: []
     }.merge(overrides)
