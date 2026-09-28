@@ -13,5 +13,5 @@ require_relative "trexbar_sway/runtime/omarchy"
 require_relative "trexbar_sway/cli"
 
 module TrexbarSway
-  VERSION = "0.1.3"
+  VERSION = "0.1.4"
 end
