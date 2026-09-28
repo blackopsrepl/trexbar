@@ -163,6 +163,7 @@ Footer:
 - `ACTIVE AGENTS` section:
   - renders agents as `AgentPill` components in a `Flow` layout (wraps to multiple lines)
   - pill shows a status dot (running/waiting), `processName / projectName`, and sub-agent count
+  - pills are agent-agnostic and render whatever `trex` reports, including `codex`, `gemini`, and `hermes`
 - `BACKEND ERRORS` section:
   - renders backend error messages as pill-shaped chips in a `Flow` layout
 
