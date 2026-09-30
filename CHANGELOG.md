@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.0](https://github.com/blackopsrepl/trexbar-sway/compare/v0.1.4...v0.2.0) (2026-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* replace trexbar-sway with trexbar and TREXBAR_SWAY_* overrides with TREXBAR_*. Default config, state, and installation paths now use trexbar. Existing installations require the documented migration; no legacy aliases or automatic file moves are provided.
+
+### Features
+
+* rebrand the desktop companion to trexbar a25001e
+
 ## [0.1.4](https://github.com/blackopsrepl/trexbar-sway/compare/v0.1.3...v0.1.4) (2026-09-28)
 
 ### Features

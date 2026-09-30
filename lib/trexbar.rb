@@ -13,5 +13,5 @@ require_relative "trexbar/runtime/omarchy"
 require_relative "trexbar/cli"
 
 module Trexbar
-  VERSION = "0.1.4"
+  VERSION = "0.2.0"
 end
