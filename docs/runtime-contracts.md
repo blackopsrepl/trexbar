@@ -5,7 +5,7 @@
 Default path:
 
 ```text
-~/.config/trexbar-sway/config.json
+~/.config/trexbar/config.json
 ```
 
 Important fields:
@@ -28,7 +28,7 @@ Important fields:
 Default path:
 
 ```text
-~/.local/state/trexbar-sway/snapshot.json
+~/.local/state/trexbar/snapshot.json
 ```
 
 The Ruby runtime owns this file. `refresh`, `snapshot`, and the daemon write it. QuickShell and Waybar read it.
@@ -49,7 +49,7 @@ The cached snapshot includes the backend payload plus a derived `view` object us
 Default path:
 
 ```text
-~/.local/state/trexbar-sway/ui.json
+~/.local/state/trexbar/ui.json
 ```
 
 Shape:
@@ -58,14 +58,14 @@ Shape:
 {"open":true,"requestedAt":"2026-05-08T00:00:00Z"}
 ```
 
-QuickShell reads this file to decide whether the modal is visible. `trexbar-sway ui open|close|toggle` writes it.
+QuickShell reads this file to decide whether the modal is visible. `trexbar ui open|close|toggle` writes it.
 
 ## Watch Event
 
 Default path:
 
 ```text
-~/.local/state/trexbar-sway/state-event.json
+~/.local/state/trexbar/state-event.json
 ```
 
 Each snapshot or UI-state write updates this file so the QuickShell frontend can reload both JSON files.
@@ -75,7 +75,7 @@ Each snapshot or UI-state write updates this file so the QuickShell frontend can
 Command:
 
 ```bash
-trexbar-sway waybar render
+trexbar waybar render
 ```
 
 Shape:

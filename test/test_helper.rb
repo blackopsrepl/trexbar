@@ -6,9 +6,9 @@ require "minitest/autorun"
 require "tmpdir"
 
 $LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
-require "trexbar_sway"
+require "trexbar"
 
-module TrexbarSwayTestHelpers
+module TrexbarTestHelpers
   def with_temp_home
     Dir.mktmpdir do |dir|
       old_home = ENV["HOME"]

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module TrexbarSway
+module Trexbar
   module Runtime
     module Presenter
       module_function

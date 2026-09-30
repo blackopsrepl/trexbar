@@ -1,9 +1,9 @@
 // Release configuration for commit-and-tag-version.
-// The application version lives in lib/trexbar_sway.rb so a release does not
+// The application version lives in lib/trexbar.rb so a release does not
 // need a hand-edited version constant.
 
 const versionFile = {
-  filename: 'lib/trexbar_sway.rb',
+  filename: 'lib/trexbar.rb',
   updater: {
     readVersion(contents) {
       const match = contents.match(/VERSION = "([^"]+)"/);

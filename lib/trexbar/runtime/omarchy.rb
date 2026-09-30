@@ -4,7 +4,7 @@ require "fileutils"
 require "json"
 require "shellwords"
 
-module TrexbarSway
+module Trexbar
   module Runtime
     # Mounts the cached-state Waybar chip as an Omarchy shell bar module so the
     # same render contract works on Hyprland desktops.
@@ -16,7 +16,7 @@ module TrexbarSway
       FALLBACK_SECTION = "center"
       SECTIONS = %w[left center right].freeze
       DEFAULT_INTERVAL = 5
-      DEFAULT_BIN = File.expand_path("../../../bin/trexbar-sway", __dir__)
+      DEFAULT_BIN = File.expand_path("../../../bin/trexbar", __dir__)
 
       def install(config_path, after: nil, section: nil, index: nil, interval: DEFAULT_INTERVAL, bin: nil)
         interval = normalize_interval(interval)
@@ -116,7 +116,7 @@ module TrexbarSway
           "interval" => interval,
           "onClick" => "#{quoted} panel --config #{config}",
           "onMiddleClick" => "#{quoted} refresh --config #{config}",
-          "tooltip" => "TrexBar tmux chip (left: panel, middle: refresh)"
+          "tooltip" => "trexbar tmux chip (left: panel, middle: refresh)"
         }
       end
 
@@ -205,7 +205,7 @@ module TrexbarSway
         candidate = File.expand_path(candidate)
         return candidate if File.executable?(candidate)
 
-        raise "trexbar-sway binary not found or not executable: #{candidate}"
+        raise "trexbar binary not found or not executable: #{candidate}"
       end
 
       def normalize_interval(interval)

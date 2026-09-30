@@ -3,7 +3,7 @@
 require "open3"
 require "timeout"
 
-module TrexbarSway
+module Trexbar
   module Core
     module Process
       Result = Struct.new(:status, :stdout, :stderr, :timed_out, keyword_init: true) do

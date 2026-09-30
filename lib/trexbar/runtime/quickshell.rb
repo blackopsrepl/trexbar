@@ -2,7 +2,7 @@
 
 require "time"
 
-module TrexbarSway
+module Trexbar
   module Runtime
     module QuickShell
       module_function
@@ -35,9 +35,9 @@ module TrexbarSway
         shell = File.expand_path(config.dig(:runtime, :quickShellShell).to_s)
         command = config.dig(:runtime, :quickShellCommand).to_s
         env = {
-          "TREXBAR_SWAY_BIN" => resolved_binary,
-          "TREXBAR_SWAY_CONFIG" => File.expand_path(config_path),
-          "TREXBAR_SWAY_STATE_DIR" => State.state_dir(config),
+          "TREXBAR_BIN" => resolved_binary,
+          "TREXBAR_CONFIG" => File.expand_path(config_path),
+          "TREXBAR_STATE_DIR" => State.state_dir(config),
           "QT_QPA_PLATFORM" => "wayland"
         }
 
@@ -46,13 +46,13 @@ module TrexbarSway
 
       def resolved_binary
         candidates = [
-          ENV["TREXBAR_SWAY_BIN"],
-          File.join(Dir.home, ".local", "bin", "trexbar-sway"),
-          File.expand_path("../../../bin/trexbar-sway", __dir__),
-          "trexbar-sway"
+          ENV["TREXBAR_BIN"],
+          File.join(Dir.home, ".local", "bin", "trexbar"),
+          File.expand_path("../../../bin/trexbar", __dir__),
+          "trexbar"
         ].compact
 
-        candidates.find { |candidate| candidate == "trexbar-sway" || File.executable?(candidate) } || "trexbar-sway"
+        candidates.find { |candidate| candidate == "trexbar" || File.executable?(candidate) } || "trexbar"
       end
     end
   end

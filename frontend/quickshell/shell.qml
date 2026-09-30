@@ -7,9 +7,9 @@ import Quickshell.Io
 ShellRoot {
     id: root
 
-    property string configPath: Quickshell.env("TREXBAR_SWAY_CONFIG") || ((Quickshell.env("HOME") || "") + "/.config/trexbar-sway/config.json")
-    property string stateDir: Quickshell.env("TREXBAR_SWAY_STATE_DIR") || ((Quickshell.env("HOME") || "") + "/.local/state/trexbar-sway")
-    property string trexbarBin: Quickshell.env("TREXBAR_SWAY_BIN") || "trexbar-sway"
+    property string configPath: Quickshell.env("TREXBAR_CONFIG") || ((Quickshell.env("HOME") || "") + "/.config/trexbar/config.json")
+    property string stateDir: Quickshell.env("TREXBAR_STATE_DIR") || ((Quickshell.env("HOME") || "") + "/.local/state/trexbar")
+    property string trexbarBin: Quickshell.env("TREXBAR_BIN") || "trexbar"
     property string snapshotPath: stateDir + "/snapshot.json"
     property string uiPath: stateDir + "/ui.json"
     property string eventPath: stateDir + "/state-event.json"

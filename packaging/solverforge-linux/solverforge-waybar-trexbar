@@ -1,10 +1,10 @@
 #!/bin/bash
 
-config_path="${TREXBAR_SWAY_CONFIG:-$HOME/.config/trexbar-sway/config.json}"
-trexbar_cmd="${TREXBAR_SWAY_BIN:-$HOME/.local/bin/trexbar-sway}"
+config_path="${TREXBAR_CONFIG:-$HOME/.config/trexbar/config.json}"
+trexbar_cmd="${TREXBAR_BIN:-$HOME/.local/bin/trexbar}"
 
-if [[ ! -x "$trexbar_cmd" ]] && command -v trexbar-sway &>/dev/null; then
-    trexbar_cmd="$(command -v trexbar-sway)"
+if [[ ! -x "$trexbar_cmd" ]] && command -v trexbar &>/dev/null; then
+    trexbar_cmd="$(command -v trexbar)"
 fi
 
 if [[ ! -x "$trexbar_cmd" ]]; then

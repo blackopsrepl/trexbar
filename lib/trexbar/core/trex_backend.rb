@@ -2,7 +2,7 @@
 
 require "json"
 
-module TrexbarSway
+module Trexbar
   module Core
     module TrexBackend
       module_function

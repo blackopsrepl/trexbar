@@ -2,7 +2,7 @@
 
 require "json"
 
-module TrexbarSway
+module Trexbar
   module Runtime
     module Waybar
       module_function
@@ -25,7 +25,7 @@ module TrexbarSway
         unless snapshot
           return {
             text: "TRX ...",
-            tooltip: "trexbar-sway is waiting for cached data.\nMiddle click: refresh",
+            tooltip: "trexbar is waiting for cached data.\nMiddle click: refresh",
             class: ["trexbar", "loading"]
           }
         end

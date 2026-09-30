@@ -2,7 +2,7 @@
 
 require "json"
 
-module TrexbarSway
+module Trexbar
   module CLI
     module_function
 
@@ -193,7 +193,7 @@ module TrexbarSway
 
     def usage
       <<~TEXT
-        trexbar-sway commands:
+        trexbar commands:
           config init|validate
           snapshot
           refresh

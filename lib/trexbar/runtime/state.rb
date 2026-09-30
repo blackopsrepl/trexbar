@@ -4,7 +4,7 @@ require "fileutils"
 require "json"
 require "time"
 
-module TrexbarSway
+module Trexbar
   module Runtime
     module State
       SNAPSHOT_VERSION = 1

@@ -4,7 +4,7 @@ require_relative "test_helper"
 
 require "shellwords"
 
-module TrexbarSway
+module Trexbar
   module Runtime
     class OmarchyTest < Minitest::Test
       def setup
@@ -75,7 +75,7 @@ module TrexbarSway
         @spaced_root = Dir.mktmpdir
         spaced = File.join(@spaced_root, "my tools")
         FileUtils.mkdir_p(spaced)
-        bin = File.join(spaced, "trexbar-sway")
+        bin = File.join(spaced, "trexbar")
         File.write(bin, "#!/bin/sh\nexit 0\n")
         File.chmod(0o755, bin)
 
@@ -114,7 +114,7 @@ module TrexbarSway
       end
 
       def test_install_rejects_unknown_binary
-        error = assert_raises(RuntimeError) { Omarchy.install(config_path, bin: "/nonexistent/trexbar-sway") }
+        error = assert_raises(RuntimeError) { Omarchy.install(config_path, bin: "/nonexistent/trexbar") }
         assert_match(/not found or not executable/, error.message)
       end
 
@@ -161,7 +161,7 @@ module TrexbarSway
       private
 
       def config_path
-        File.join(ENV["HOME"], ".config", "trexbar-sway", "config.json")
+        File.join(ENV["HOME"], ".config", "trexbar", "config.json")
       end
 
       def ids(entries)
@@ -209,7 +209,7 @@ module TrexbarSway
 
       def fake_bin
         @fake_bin_dir = Dir.mktmpdir
-        path = File.join(@fake_bin_dir, "trexbar-sway")
+        path = File.join(@fake_bin_dir, "trexbar")
         File.write(path, "#!/bin/sh\nexit 0\n")
         File.chmod(0o755, path)
         path

@@ -2,26 +2,26 @@
 
 require_relative "test_helper"
 
-module TrexbarSway
+module Trexbar
   module Runtime
     class QuickShellTest < Minitest::Test
-      include TrexbarSwayTestHelpers
+      include TrexbarTestHelpers
 
       def test_resolved_binary_prefers_explicit_environment
         with_temp_home do |home|
           bin = write_executable(home, "explicit-trexbar")
 
-          ENV["TREXBAR_SWAY_BIN"] = bin
+          ENV["TREXBAR_BIN"] = bin
 
           assert_equal bin, QuickShell.resolved_binary
         end
       ensure
-        ENV.delete("TREXBAR_SWAY_BIN")
+        ENV.delete("TREXBAR_BIN")
       end
 
       def test_resolved_binary_falls_back_to_absolute_checkout_binary
         with_temp_home do
-          ENV.delete("TREXBAR_SWAY_BIN")
+          ENV.delete("TREXBAR_BIN")
 
           resolved = QuickShell.resolved_binary
 
@@ -32,7 +32,7 @@ module TrexbarSway
 
       def test_resolved_binary_ignores_blank_environment
         with_temp_home do
-          ENV["TREXBAR_SWAY_BIN"] = ""
+          ENV["TREXBAR_BIN"] = ""
 
           resolved = QuickShell.resolved_binary
 
@@ -40,7 +40,7 @@ module TrexbarSway
           refute_equal "", resolved
         end
       ensure
-        ENV.delete("TREXBAR_SWAY_BIN")
+        ENV.delete("TREXBAR_BIN")
       end
 
       private

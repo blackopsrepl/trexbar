@@ -3,25 +3,25 @@
 require "fileutils"
 require "json"
 
-module TrexbarSway
+module Trexbar
   module Core
     module Config
       module_function
 
       def default_config_path
-        File.join(Dir.home, ".config", "trexbar-sway", "config.json")
+        File.join(Dir.home, ".config", "trexbar", "config.json")
       end
 
       def default_config
         {
           version: 1,
           runtime: {
-            stateDir: File.join(Dir.home, ".local", "state", "trexbar-sway"),
+            stateDir: File.join(Dir.home, ".local", "state", "trexbar"),
             refreshSeconds: 5,
             waybarSignal: 11,
             trexCommand: default_trex_command,
             quickShellCommand: "quickshell",
-            quickShellShell: File.join(Dir.home, ".local", "share", "trexbar-sway", "frontend", "quickshell", "shell.qml")
+            quickShellShell: File.join(Dir.home, ".local", "share", "trexbar", "frontend", "quickshell", "shell.qml")
           },
           display: {
             maxSessions: 8,
@@ -41,7 +41,7 @@ module TrexbarSway
 
         normalize_config(JSON.parse(File.read(File.expand_path(path)), symbolize_names: true))
       rescue JSON::ParserError => e
-        raise "Invalid trexbar-sway config #{path}: #{e.message}"
+        raise "Invalid trexbar config #{path}: #{e.message}"
       end
 
       def save_config(config, path = default_config_path)

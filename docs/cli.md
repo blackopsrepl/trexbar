@@ -1,14 +1,14 @@
 # CLI
 
 ```text
-trexbar-sway config init|validate
-trexbar-sway snapshot
-trexbar-sway refresh
-trexbar-sway daemon [--once]
-trexbar-sway panel
-trexbar-sway ui open|close|toggle|status
-trexbar-sway waybar render|refresh|panel
-trexbar-sway omarchy install|remove|status
+trexbar config init|validate
+trexbar snapshot
+trexbar refresh
+trexbar daemon [--once]
+trexbar panel
+trexbar ui open|close|toggle|status
+trexbar waybar render|refresh|panel
+trexbar omarchy install|remove|status
 ```
 
 Global flags:
@@ -36,4 +36,4 @@ Behavior notes:
 - `--section left|center|right` — explicit target section
 - `--index N` — explicit position inside `--section` (must be within `0..length`)
 - `--interval SECONDS` — render poll interval (default 5)
-- `--exec PATH` — alternate `trexbar-sway` binary to record in the module commands
+- `--exec PATH` — alternate `trexbar` binary to record in the module commands

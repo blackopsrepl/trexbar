@@ -3,11 +3,11 @@
 require_relative "test_helper"
 
 class PresenterTest < Minitest::Test
-  include TrexbarSwayTestHelpers
+  include TrexbarTestHelpers
 
   def test_builds_chip_classes
-    snapshot = TrexbarSway::Runtime::State.build_snapshot(TrexbarSway::Core::Config.default_config, backend_payload)
-    view = TrexbarSway::Runtime::Presenter.build_snapshot_view(snapshot, stale: false)
+    snapshot = Trexbar::Runtime::State.build_snapshot(Trexbar::Core::Config.default_config, backend_payload)
+    view = Trexbar::Runtime::Presenter.build_snapshot_view(snapshot, stale: false)
 
     assert_includes view.dig(:chip, :classes), "trexbar"
     assert_includes view.dig(:chip, :classes), "warning"
@@ -18,8 +18,8 @@ class PresenterTest < Minitest::Test
   end
 
   def test_surfaces_detected_agents_including_hermes
-    snapshot = TrexbarSway::Runtime::State.build_snapshot(TrexbarSway::Core::Config.default_config, backend_payload)
-    view = TrexbarSway::Runtime::Presenter.build_snapshot_view(snapshot, stale: false)
+    snapshot = Trexbar::Runtime::State.build_snapshot(Trexbar::Core::Config.default_config, backend_payload)
+    view = Trexbar::Runtime::Presenter.build_snapshot_view(snapshot, stale: false)
 
     names = view[:agents].map { |agent| agent[:processName] }
     assert_includes names, "codex"
@@ -28,8 +28,8 @@ class PresenterTest < Minitest::Test
   end
 
   def test_loading_payload_has_stable_classes
-    config = TrexbarSway::Core::Config.default_config
-    payload = TrexbarSway::Runtime::Waybar.payload(config, nil)
+    config = Trexbar::Core::Config.default_config
+    payload = Trexbar::Runtime::Waybar.payload(config, nil)
 
     assert_equal ["trexbar", "loading"], payload[:class]
     assert_match(/TRX/, payload[:text])

@@ -1,10 +1,10 @@
 # WIREFRAME.md
 
-This document describes the shipped `trexbar-sway` interface and runtime contract. It is a current-state wireframe for the Waybar chip, QuickShell modal, CLI controls, and cached files.
+This document describes the shipped `trexbar` interface and runtime contract. It is a current-state wireframe for the Waybar chip, QuickShell modal, CLI controls, and cached files.
 
 ## Scope
 
-`trexbar-sway` is a read-only Sway and Waybar companion for `trex`.
+`trexbar` is a read-only desktop companion for `trex`, supporting Waybar on Sway and Hyprland and the Omarchy shell.
 
 It does:
 
@@ -27,13 +27,13 @@ It does not:
 Renderer:
 
 ```bash
-trexbar-sway waybar render
+trexbar waybar render
 ```
 
 Data source:
 
 ```text
-~/.local/state/trexbar-sway/snapshot.json
+~/.local/state/trexbar/snapshot.json
 ```
 
 No cached snapshot:
@@ -44,7 +44,7 @@ No cached snapshot:
 +----------------+
 class: trexbar loading
 tooltip:
-  trexbar-sway is waiting for cached data.
+  trexbar is waiting for cached data.
   Middle click: refresh
 ```
 
@@ -62,7 +62,7 @@ class:
   dirty-repos
   headline-attached
 tooltip:
-  trexbar-sway
+  trexbar
   Sessions: 10 | Attached: 8 | Agents: 12
   Activity: 2 active, 0 idle, 8 dormant
   <up to display.maxSessions session summary rows>
@@ -84,15 +84,15 @@ Stale snapshots use the normal cached payload with `stale` status/classes and `(
 Launcher:
 
 ```bash
-trexbar-sway panel
-trexbar-sway waybar panel
-trexbar-sway ui open
+trexbar panel
+trexbar waybar panel
+trexbar ui open
 ```
 
 Close controls:
 
 ```bash
-trexbar-sway ui close
+trexbar ui close
 Esc inside the modal
 click outside the modal card
 Close button
@@ -134,7 +134,7 @@ Header:
 - headline session chosen by highest health severity, CPU, memory, and attached state
 - snapshot `generatedAt`
 - status pill using the snapshot status
-- `Refresh` button runs `trexbar-sway refresh`
+- `Refresh` button runs `trexbar refresh`
 - `Close` button writes UI state closed
 
 Metric row:
@@ -172,7 +172,7 @@ Footer:
 Default directory:
 
 ```text
-~/.local/state/trexbar-sway
+~/.local/state/trexbar
 ```
 
 Files:
@@ -222,14 +222,14 @@ Files:
 ## CLI Surface
 
 ```text
-trexbar-sway config init|validate
-trexbar-sway snapshot
-trexbar-sway refresh
-trexbar-sway daemon [--once]
-trexbar-sway panel
-trexbar-sway ui open|close|toggle|status
-trexbar-sway waybar render|refresh|panel
-trexbar-sway omarchy install|remove|status
+trexbar config init|validate
+trexbar snapshot
+trexbar refresh
+trexbar daemon [--once]
+trexbar panel
+trexbar ui open|close|toggle|status
+trexbar waybar render|refresh|panel
+trexbar omarchy install|remove|status
 ```
 
 Global flags:
@@ -255,7 +255,7 @@ Behavior:
 Default config path:
 
 ```text
-~/.config/trexbar-sway/config.json
+~/.config/trexbar/config.json
 ```
 
 Defaults:
@@ -264,12 +264,12 @@ Defaults:
 {
   "version": 1,
   "runtime": {
-    "stateDir": "~/.local/state/trexbar-sway",
+    "stateDir": "~/.local/state/trexbar",
     "refreshSeconds": 5,
     "waybarSignal": 11,
     "trexCommand": "~/.cargo/bin/trex if executable, otherwise trex",
     "quickShellCommand": "quickshell",
-    "quickShellShell": "~/.local/share/trexbar-sway/frontend/quickshell/shell.qml"
+    "quickShellShell": "~/.local/share/trexbar/frontend/quickshell/shell.qml"
   },
   "display": {
     "maxSessions": 8,
@@ -290,15 +290,15 @@ packaging/solverforge-linux/solverforge-waybar-trexbar
 
 Default command mapping:
 
-- no argument or `render`: `trexbar-sway waybar render`
-- `panel`, `details`, or `open`: `trexbar-sway waybar panel`
-- `refresh`: `trexbar-sway refresh`
+- no argument or `render`: `trexbar waybar render`
+- `panel`, `details`, or `open`: `trexbar waybar panel`
+- `refresh`: `trexbar refresh`
 - unknown argument: render fallback
 
 The wrapper resolves:
 
-- `TREXBAR_SWAY_CONFIG`, defaulting to `~/.config/trexbar-sway/config.json`
-- `TREXBAR_SWAY_BIN`, defaulting to `~/.local/bin/trexbar-sway`
+- `TREXBAR_CONFIG`, defaulting to `~/.config/trexbar/config.json`
+- `TREXBAR_BIN`, defaulting to `~/.local/bin/trexbar`
 
 ## Documentation Surfaces
 

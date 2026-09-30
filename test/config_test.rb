@@ -3,29 +3,29 @@
 require_relative "test_helper"
 
 class ConfigTest < Minitest::Test
-  include TrexbarSwayTestHelpers
+  include TrexbarTestHelpers
 
   def test_default_config_is_valid
     with_temp_home do
-      config = TrexbarSway::Core::Config.default_config
-      assert_empty TrexbarSway::Core::Config.validate_config(config)
+      config = Trexbar::Core::Config.default_config
+      assert_empty Trexbar::Core::Config.validate_config(config)
     end
   end
 
   def test_init_writes_config
     with_temp_home do |home|
-      path = File.join(home, ".config", "trexbar-sway", "config.json")
-      config = TrexbarSway::Core::Config.init_config(path)
+      path = File.join(home, ".config", "trexbar", "config.json")
+      config = Trexbar::Core::Config.init_config(path)
 
       assert File.file?(path)
       assert_equal 11, config.dig(:runtime, :waybarSignal)
-      assert_equal config, TrexbarSway::Core::Config.load_config(path)
+      assert_equal config, Trexbar::Core::Config.load_config(path)
     end
   end
 
   def test_invalid_interval_is_reported
-    config = TrexbarSway::Core::Config.normalize_config(runtime: { refreshSeconds: 0 })
-    issues = TrexbarSway::Core::Config.validate_config(config)
+    config = Trexbar::Core::Config.normalize_config(runtime: { refreshSeconds: 0 })
+    issues = Trexbar::Core::Config.validate_config(config)
 
     assert issues.any? { |issue| issue[:field] == "runtime.refreshSeconds" }
   end

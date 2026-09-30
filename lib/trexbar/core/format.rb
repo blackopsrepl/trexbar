@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module TrexbarSway
+module Trexbar
   module Core
     module Format
       module_function
@@ -22,7 +22,7 @@ module TrexbarSway
       def tooltip_lines(snapshot, stale: false, max_sessions: 8)
         summary = snapshot[:summary] || {}
         lines = []
-        lines << "trexbar-sway#{stale ? ' (stale)' : ''}"
+        lines << "trexbar#{stale ? ' (stale)' : ''}"
         lines << "Sessions: #{summary[:sessionCount].to_i} | Attached: #{summary[:attachedCount].to_i} | Agents: #{summary[:agentCount].to_i}"
         lines << "Activity: #{summary[:activeCount].to_i} active, #{summary[:idleCount].to_i} idle, #{summary[:dormantCount].to_i} dormant"
 

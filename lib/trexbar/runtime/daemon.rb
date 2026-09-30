@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module TrexbarSway
+module Trexbar
   module Runtime
     module Daemon
       module_function
@@ -10,14 +10,14 @@ module TrexbarSway
         return refresh(config_path, config: config) if once
 
         lock = State.acquire_daemon_lock(config)
-        raise "trexbar-sway daemon already running for #{State.state_dir(config)}." unless lock
+        raise "trexbar daemon already running for #{State.state_dir(config)}." unless lock
 
         refresh(config_path, config: config)
         loop do
           sleep(config.dig(:runtime, :refreshSeconds).to_i)
           refresh(config_path, config: config)
         rescue StandardError => e
-          warn "trexbar-sway daemon refresh error: #{e.message}"
+          warn "trexbar daemon refresh error: #{e.message}"
         end
       ensure
         lock&.close
