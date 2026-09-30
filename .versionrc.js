@@ -20,6 +20,6 @@ module.exports = {
   bumpFiles: [versionFile],
   tagPrefix: 'v',
   releaseCommitMessageFormat: 'chore(release): {{currentTag}}',
-  commitUrlFormat: 'https://github.com/blackopsrepl/trexbar-sway/commit/{{hash}}',
-  compareUrlFormat: 'https://github.com/blackopsrepl/trexbar-sway/compare/{{previousTag}}...{{currentTag}}',
+  commitUrlFormat: 'https://github.com/blackopsrepl/trexbar/commit/{{hash}}',
+  compareUrlFormat: 'https://github.com/blackopsrepl/trexbar/compare/{{previousTag}}...{{currentTag}}',
 };
