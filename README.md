@@ -1,4 +1,10 @@
-# trexbar
+# trexbar — retired
+
+> **Deprecated and archived.** Session management now lives in the Hermes
+> desktop application, which manages multiple sessions itself, so this
+> companion has no role left. It has been removed from the SolverForge Linux
+> Waybar, and this repository is archived read-only. Everything below is kept
+> for historical reference only.
 
 <p align="center">
   <img src="assets/trexbar-mascot.png" alt="trexbar mascot" width="260">
